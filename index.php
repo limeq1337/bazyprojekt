@@ -4,43 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=<?php echo time(); ?>">
     <title>Nazwa</title>
 </head>
 <body>
-   
-    <div class="container mt-5">
+    <div class="container-fluid">
         <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header">
-                        Login
-                    </div>
-                    <div class="card-body">
-                        <?php
-                        // Sprawdzanie, czy istnieje parametr error w adresie URL
-                        if(isset($_GET['error'])) {
-                            $error = $_GET['error'];
-                            if($error == 1) {
-                                echo '<div class="alert alert-danger" role="alert">Nieprawidłowa nazwa użytkownika lub hasło.</div>';
-                            } elseif($error == 2) {
-                                echo '<div class="alert alert-danger" role="alert">Wprowadź nazwę użytkownika i hasło.</div>';
-                            }
-                        }
-                        ?>
-                        <form method="POST" action="login2.php">
-                            <div class="form-group">
-                                <label for="username">Nazwa użytkownika:</label>
-                                <input type="text" class="form-control" id="login" name="login" placeholder="Wprowadź nazwę użytkownika">
-                            </div>
-                            <div class="form-group">
-                                <label for="password">Hasło:</label>
-                                <input type="password" class="form-control" id="pass" name="pass" placeholder="Wprowadź hasło">
-                            </div>
-                            <button type="submit" class="btn btn-primary">Zaloguj</button>
-                        </form>
-                    </div>
-                </div>
+            <div class="col">
+            <h1 id="maintext">Hotel Trivago</h1>
+                <h3 id="secondtext">Witaj użytkowniku, wybierz odpowiednią kategorie:</h3>
+                <a href="gosc.php"><button class="text-center btn butchoose  ">Gość</button></a>
+                <a href="pracownik.php"><button class="text-center btn butchoose  ">Pracownik</button></a>
             </div>
         </div>
     </div>

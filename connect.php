@@ -1,16 +1,47 @@
 <?php
-$servername = "localhost"; // Nazwa hosta
-$username = "00956788_projekt"; // Nazwa użytkownika bazy danych
-$password = "Projekt123@"; // Hasło użytkownika bazy danych
-$dbname = "00956788_projekt"; // Nazwa bazy danych
+$servername = "localhost"; 
+$username = "srv64140_bazy"; 
+$password = "Jv54ZBp2VCjad9HJET7v"; 
+$dbname = "srv64140_bazy"; 
 
-// Tworzenie połączenia z bazą danych
+
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Sprawdzanie połączenia
+
 if ($conn->connect_error) {
     die("Błąd połączenia z bazą danych: " . $conn->connect_error);
-} else {
-    echo "Połączono pomyślnie!";
 }
+
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    if (!empty($_POST['login']) && !empty($_POST['pass'])) {
+        $login = $_POST['login'];
+        $pass = $_POST['pass'];
+        
+
+        $login = mysqli_real_escape_string($conn, $login);
+        $pass = mysqli_real_escape_string($conn, $pass);
+        
+
+        $sql = "SELECT * FROM workers WHERE worker_login = '$login' AND worker_password = '$pass'";
+        $result = $conn->query($sql);
+        
+
+        if ($result->num_rows > 0) {
+            header("Location: welcome.php");
+            exit();
+        } else {
+
+         
+            exit();
+        }
+    } else {
+
+      
+        exit();
+    }
+}
+
+$conn->close();
 ?>
