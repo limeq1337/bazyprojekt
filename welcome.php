@@ -12,31 +12,64 @@
         <div class="row justify-content-center">
             <div class="col">
             <h1 id="maintext">Hotel Trivago</h1>
+            <h2>Lista rezerwacji</h2>
             <?php
-include 'connect.php';
+$servername = "localhost"; 
+$username = "srv64140_bazy"; 
+$password = "Jv54ZBp2VCjad9HJET7v"; 
+$dbname = "srv64140_bazy"; 
 
-if(isset($_GET['login'])){
+$conn = new mysqli($servername, $username, $password, $dbname);
 
-    $login = $_GET['login'];
-    $login = mysqli_real_escape_string($conn, $login); 
-
-    $sql = "SELECT * FROM workers WHERE worker_login = '$login'";
-    $result = $conn->query($sql);
-
-    if ($result->num_rows == 1) {
-        $row = $result->fetch_assoc();
-        $username = $row['worker_login'];
-    
-        $password = $row['worker_password'];
-        echo "<h3>Witaj, $username!</h3>"; 
-        echo "Błąd: Brak danych użytkownika!";
-    }
-} else {
-    echo "Błąd: Brak nazwy użytkownika!";
+if ($conn->connect_error) {
+    die("Błąd połączenia z bazą danych: " . $conn->connect_error);
 }
 
-$conn->close(); 
+
+
+$sql = "SELECT * FROM reservation";
+$result = $conn->query($sql);
+
+if ($result === FALSE) {
+    die("Błąd zapytania: " . mysqli_error($conn));
+}
+
+if ($result->num_rows > 0) {
+    echo "<table class='table'>";
+    echo "<thead><tr><th>Reservation ID</th><th>Guest ID</th><th>Room Number</th><th>Date</th><th>Price</th><th>Feeding Option</th><th>Stay ID</th><th>Stay Period</th><th>Location</th><th>Hotel Name</th><th>Room Type</th><th>Standard</th></tr></thead>";
+    echo "<tbody>";
+
+    while($row = $result->fetch_assoc()) {
+        echo "<tr>";
+        echo "<td>" . $row["reservationId"] . "</td>";
+        echo "<td>" . $row["guestId"] . "</td>";
+        echo "<td>" . $row["roomNumber"] . "</td>";
+        echo "<td>" . $row["date"] . "</td>";
+        echo "<td>" . $row["price"] . "</td>";
+        echo "<td>" . $row["feedingOption"] . "</td>";
+        echo "<td>" . $row["stayId"] . "</td>";
+        echo "<td>" . $row["stayPeriod"] . "</td>";
+        echo "<td>" . $row["location"] . "</td>";
+        echo "<td>" . $row["hotelName"] . "</td>";
+        echo "<td>" . $row["roomType"] . "</td>";
+        echo "<td>" . $row["standard"] . "</td>";
+
+        echo "</tr>";
+    }
+
+    echo "</tbody>";
+    echo "</table>";
+} else {
+    echo "Brak rekordów w tabeli rezerwacji.";
+}
+
+$conn->close();
 ?>
+
+
+
+
+
 
 
                 <br><a href="index.php"><button class="workerbut text-center btn ">Wróć do początku</button></a>

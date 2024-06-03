@@ -11,8 +11,10 @@
 <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col" id="trivago">
+                <h1 id="maintext2">Zalogowano! Wybierz jeszcze raz ofertę!</h1>
                 <h1 id="maintext2">Hotel Trivago</h1>
                 <h3 id="secondtext">Wyszukiwarka pobytów</h3>
+
 
                 <div id="formsearch">
                     <form method="GET" id="searchForm">
@@ -25,21 +27,19 @@
                             <select name="location" id="location" class="form-control m-auto" style="width: 200px;">
                                 <option value="">Wybierz lokalizację</option>
                                 <?php
-              
+               
                             $servername = "localhost"; 
                             $username = "srv64140_bazy"; 
                             $password = "Jv54ZBp2VCjad9HJET7v"; 
                             $dbname = "srv64140_bazy"; 
 
-              
                             $conn = new mysqli($servername, $username, $password, $dbname);
 
-              
                             if ($conn->connect_error) {
                                 die("Connection failed: " . $conn->connect_error);
                             }
 
-                     
+          
                             $sql = "SELECT DISTINCT location FROM available_stays";
                             $result = $conn->query($sql);
 
@@ -98,10 +98,10 @@
                 <div id="available_stays" class="row mt-4">
                 <?php
             if ($_SERVER["REQUEST_METHOD"] == "GET" && !empty($_GET)) {
-          
+       
                 $sql = "SELECT stayId, stayPeriod, location, feedingOption, roomType, standard, img, hotelName FROM available_stays WHERE 1=1";
 
-         
+     
                 if (!empty($_GET['stayPeriod'])) {
                     $stayPeriod = $_GET['stayPeriod'];
                     $sql .= " AND stayPeriod = '$stayPeriod'";
@@ -140,7 +140,7 @@
                         echo '<p class="card-text">Opcja Wyżywienia: ' . ($row["feedingOption"] ? 'Tak' : 'Nie') . '</p>';
                         echo '<p class="card-text">Rodzaj Pokoju: ' . $row["roomType"] . '</p>';
                         echo '<p class="card-text">Standard: ' . $row["standard"] . '</p>';
-                        echo '<form method="POST">';
+                        echo '<form method="POST" action="reservation.php">';
                         echo '<input type="hidden" name="stayId" value="' . $row["stayId"] . '">';
                         echo '<input type="hidden" name="stayPeriod" value="' . $row["stayPeriod"] . '">';
                         echo '<input type="hidden" name="location" value="' . $row["location"] . '">';
@@ -148,13 +148,12 @@
                         echo '<input type="hidden" name="roomType" value="' . $row["roomType"] . '">';
                         echo '<input type="hidden" name="standard" value="' . $row["standard"] . '">';
                         echo '<input type="hidden" name="hotelName" value="' . $row["hotelName"] . '">';
-                        echo '<button type="button" id="reserveButton" class="workerbut btn btn-primary" onclick="handleReservation();">Rezerwuj</button>';
+                        echo '<button type="submit" class="workerbut btn search btn-primary">Rezerwuj</button>';
                         echo '</form>';
                         echo '</div>';
                         echo '</div>';
                         echo '</div>';
                     }
-                    echo '<script>document.getElementById("available_stays").style.display = "flex";</script>';
                 } else {
                     echo "Brak dostępnych pobytów.";
                 }
@@ -169,24 +168,50 @@
             </div>
         </div>
     </div>
-    <script>
+    <?php
+session_start(); 
 
+
+if (!isset($_SESSION['guestLogin'])) {
+
+    header("Location: index.php");
+    exit();
+}
+
+
+$guestLogin = $_SESSION['guestLogin'];
+
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    if (!empty($_POST['stayId']) && !empty($_POST['stayPeriod']) && !empty($_POST['location']) && !empty($_POST['feedingOption']) && !empty($_POST['roomType']) && !empty($_POST['standard']) && !empty($_POST['hotelName'])) {
+
+        $stayId = $_POST['stayId'];
+        $stayPeriod = $_POST['stayPeriod'];
+        $location = $_POST['location'];
+        $feedingOption = $_POST['feedingOption'];
+        $roomType = $_POST['roomType'];
+        $standard = $_POST['standard'];
+        $hotelName = $_POST['hotelName'];
+        
+
+        header("Location: reservation.php?stayId=$stayId&stayPeriod=$stayPeriod&location=$location&feedingOption=$feedingOption&roomType=$roomType&standard=$standard&hotelName=$hotelName");
+        exit();
+    } else {
+
+        echo "Nie uzupełniono wszystkich pól formularza.";
+    }
+}
+?>
+    <script>
+   
     function handleReservation() {
         var confirmLogin = confirm("Aby złożyć rezerwację, musisz mieć konto. Kliknij Ok a zostaniesz przekierowany do odpowiedniej strony");
         if (confirmLogin) {
-            window.location.href = "logreg.php"; 
+            window.location.href = "guestLogin.php"; 
         } else {
- 
+           
         }
-    }
-
-
-    var reserveButton = document.getElementById("reserveButton");
-    if (reserveButton) {
-        reserveButton.addEventListener("click", function(event) {
-            event.preventDefault();
-            handleReservation();
-        });
     }
 </script>
 
